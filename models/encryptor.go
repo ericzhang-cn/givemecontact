@@ -15,19 +15,9 @@ type EncryptorCreateResponse struct {
 }
 
 type EncryptRequest struct {
-	Phrase string `json:"phrase"`
 	Text   string `json:"text"`
 }
 
 type EncryptResponse struct {
-	Text string `json:"text"`
-}
-
-type DecryptRequest struct {
-	PrivateKey string `json:"privateKey"`
-	Text       string `json:"text"`
-}
-
-type DecryptResponse struct {
 	Text string `json:"text"`
 }

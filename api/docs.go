@@ -26,7 +26,7 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/endpoint/v1/encryptor/": {
+        "/endpoint/v1/encryptors/": {
             "post": {
                 "produces": [
                     "application/json"
@@ -39,7 +39,168 @@ var doc = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.EncryptorCreateResult"
+                            "$ref": "#/definitions/models.EncryptorCreateResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.HttpError"
+                        }
+                    }
+                }
+            }
+        },
+        "/endpoint/v1/encryptors/{id}/encrypt/": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Encryptor"
+                ],
+                "summary": "Encrypt plain text",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "encryptor id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "encrypt request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.EncryptRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.EncryptResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.HttpError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/models.HttpError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.HttpError"
+                        }
+                    }
+                }
+            }
+        },
+        "/endpoint/v1/messages/": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Message"
+                ],
+                "summary": "Create new message",
+                "parameters": [
+                    {
+                        "description": "create message request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.MessageCreateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.MessageCreateResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.HttpError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.HttpError"
+                        }
+                    }
+                }
+            }
+        },
+        "/endpoint/v1/messages/{id}/decrypt/": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Message"
+                ],
+                "summary": "Decrypt cipher text",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "encryptor id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "decrypt request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.DecryptRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.DecryptResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.HttpError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/models.HttpError"
                         }
                     },
                     "500": {
@@ -53,7 +214,39 @@ var doc = `{
         }
     },
     "definitions": {
-        "models.EncryptorCreateResult": {
+        "models.DecryptRequest": {
+            "type": "object",
+            "properties": {
+                "privateKey": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.DecryptResponse": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.EncryptRequest": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.EncryptResponse": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.EncryptorCreateResponse": {
             "type": "object",
             "properties": {
                 "phrase": {
@@ -74,6 +267,25 @@ var doc = `{
                     "type": "string"
                 }
             }
+        },
+        "models.MessageCreateRequest": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.MessageCreateResponse": {
+            "type": "object",
+            "properties": {
+                "phrase": {
+                    "type": "string"
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
         }
     }
 }`
@@ -90,7 +302,7 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "1.0",
-	Host:        "givemecontact.io",
+	Host:        "localhost:8080",
 	BasePath:    "/",
 	Schemes:     []string{},
 	Title:       "GiveMeContact Endpoint",

@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "github.com/ericzhang-cn/givemecontact/api/docs"
+	_ "github.com/ericzhang-cn/givemecontact/api"
 	"github.com/ericzhang-cn/givemecontact/handlers"
 	"github.com/ericzhang-cn/givemecontact/models"
 	"github.com/ericzhang-cn/givemecontact/utils"
@@ -17,7 +17,7 @@ import (
 // @description GiveMeContact Endpoint
 // @termsOfService http://swagger.io/terms/
 
-// @host givemecontact.io
+// @host localhost:8080
 // @BasePath /
 func main() {
 	viper.SetConfigName("config")
@@ -31,9 +31,15 @@ func main() {
 	if err := db.AutoMigrate(&models.Encryptor{}); err != nil {
 		log.Fatalf("migrate database failed, error message: %s", err.Error())
 	}
+	if err := db.AutoMigrate(&models.Message{}); err != nil {
+		log.Fatalf("migrate database failed, error message: %s", err.Error())
+	}
 
 	r := gin.Default()
-	r.POST("/endpoint/v1/encryptor/", handlers.CreateEncryptor)
+	r.POST("/endpoint/v1/encryptors/", handlers.CreateEncryptor)
+	r.POST("/endpoint/v1/encryptors/:id/encrypt/", handlers.Encrypt)
+	r.POST("/endpoint/v1/messages/", handlers.CreateMessage)
+	r.POST("/endpoint/v1/messages/:id/decrypt/", handlers.Decrypt)
 	api := ginSwagger.URL("http://localhost:8080/swagger/doc.json")
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, api))
 	if err := r.Run(); err != nil {

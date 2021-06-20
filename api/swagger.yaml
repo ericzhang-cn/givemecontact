@@ -1,6 +1,26 @@
 basePath: /
 definitions:
-  models.EncryptorCreateResult:
+  models.DecryptRequest:
+    properties:
+      privateKey:
+        type: string
+    type: object
+  models.DecryptResponse:
+    properties:
+      text:
+        type: string
+    type: object
+  models.EncryptRequest:
+    properties:
+      text:
+        type: string
+    type: object
+  models.EncryptResponse:
+    properties:
+      text:
+        type: string
+    type: object
+  models.EncryptorCreateResponse:
     properties:
       phrase:
         type: string
@@ -14,7 +34,19 @@ definitions:
       error:
         type: string
     type: object
-host: givemecontact.io
+  models.MessageCreateRequest:
+    properties:
+      text:
+        type: string
+    type: object
+  models.MessageCreateResponse:
+    properties:
+      phrase:
+        type: string
+      text:
+        type: string
+    type: object
+host: localhost:8080
 info:
   contact: {}
   description: GiveMeContact Endpoint
@@ -23,7 +55,7 @@ info:
   title: GiveMeContact Endpoint
   version: "1.0"
 paths:
-  /endpoint/v1/encryptor/:
+  /endpoint/v1/encryptors/:
     post:
       produces:
       - application/json
@@ -31,7 +63,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.EncryptorCreateResult'
+            $ref: '#/definitions/models.EncryptorCreateResponse'
         "500":
           description: Internal Server Error
           schema:
@@ -39,4 +71,109 @@ paths:
       summary: Create new encryptor
       tags:
       - Encryptor
+  /endpoint/v1/encryptors/{id}/encrypt/:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: encryptor id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: encrypt request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.EncryptRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.EncryptResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HttpError'
+      summary: Encrypt plain text
+      tags:
+      - Encryptor
+  /endpoint/v1/messages/:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: create message request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.MessageCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.MessageCreateResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HttpError'
+      summary: Create new message
+      tags:
+      - Message
+  /endpoint/v1/messages/{id}/decrypt/:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: encryptor id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: decrypt request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.DecryptRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.DecryptResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.HttpError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HttpError'
+      summary: Decrypt cipher text
+      tags:
+      - Message
 swagger: "2.0"
