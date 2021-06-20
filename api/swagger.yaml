@@ -1,0 +1,42 @@
+basePath: /
+definitions:
+  models.EncryptorCreateResult:
+    properties:
+      phrase:
+        type: string
+      privateKey:
+        type: string
+      publicKey:
+        type: string
+    type: object
+  models.HttpError:
+    properties:
+      error:
+        type: string
+    type: object
+host: givemecontact.io
+info:
+  contact: {}
+  description: GiveMeContact Endpoint
+  license: {}
+  termsOfService: http://swagger.io/terms/
+  title: GiveMeContact Endpoint
+  version: "1.0"
+paths:
+  /endpoint/v1/encryptor/:
+    post:
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.EncryptorCreateResult'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.HttpError'
+      summary: Create new encryptor
+      tags:
+      - Encryptor
+swagger: "2.0"

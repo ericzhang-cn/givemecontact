@@ -1,0 +1,64 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "GiveMeContact Endpoint",
+        "title": "GiveMeContact Endpoint",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {},
+        "license": {},
+        "version": "1.0"
+    },
+    "host": "givemecontact.io",
+    "basePath": "/",
+    "paths": {
+        "/endpoint/v1/encryptor/": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Encryptor"
+                ],
+                "summary": "Create new encryptor",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.EncryptorCreateResult"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.HttpError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.EncryptorCreateResult": {
+            "type": "object",
+            "properties": {
+                "phrase": {
+                    "type": "string"
+                },
+                "privateKey": {
+                    "type": "string"
+                },
+                "publicKey": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.HttpError": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
